@@ -17,7 +17,7 @@ class Ticker implements ITicker {
       const response: AxiosResponse<any> = await axios.get(URL);
 
       const liveQuoteResult = response.data.quoteSummary.result[0].price;
-      console.log(liveQuoteResult);
+
       return {
         open: liveQuoteResult.regularMarketOpen.fmt,
         price: liveQuoteResult.regularMarketPrice.fmt,

@@ -12,6 +12,16 @@
   },
   "plugins": ["prettier", "@typescript-eslint"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "import/extensions": "off",
+    "no-console": "off"
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }
