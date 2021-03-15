@@ -2,7 +2,8 @@
   "name": "traders",
   "version": "0.0.2",
   "description": "Get free financial data in a simple and fast way",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint",
