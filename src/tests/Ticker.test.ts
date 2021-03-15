@@ -43,8 +43,6 @@ test('- Test Ticker.historical("1m", "2021-03-01", "2021-03-02")', async () => {
   const result = await ticker.historical('1m', '2021-03-01', '2021-03-15');
 
   if (result) {
-    console.log(result);
-
     expect(1).toBe(1);
   } else {
     expect(result).toBe(undefined);
