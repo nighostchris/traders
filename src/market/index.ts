@@ -1,14 +1,16 @@
 /* eslint-disable class-methods-use-this, object-curly-newline */
+import axios from 'axios';
+import cheerio from 'cheerio';
 import PromiseFTP from 'promise-ftp';
 
-import { IMarket, NasdaqRecord } from '../interfaces/market';
-import { NASDAQ_TRADER_URL } from '../constants';
+import { IMarket, ConstitueRecord } from '../interfaces/market';
+import { NASDAQ_TRADER_URL, WIKI_SNP_COMPANIES_URL } from '../constants';
 import { streamToString } from '../utils/stream';
 
 class Market implements IMarket {
-  async listNasdaq(): Promise<Array<NasdaqRecord> | undefined> {
+  async listNasdaq(): Promise<Array<ConstitueRecord> | undefined> {
     let rawNasdaqListing: string = '';
-    const ftpClient = new PromiseFTP();
+    const ftpClient: PromiseFTP = new PromiseFTP();
 
     await ftpClient.connect({ host: NASDAQ_TRADER_URL });
 
@@ -19,16 +21,48 @@ class Market implements IMarket {
 
     ftpClient.end();
 
-    let nasdaqListing = rawNasdaqListing.split('\n');
+    let nasdaqListing: string[] = rawNasdaqListing.split('\n');
     nasdaqListing = nasdaqListing.slice(1, nasdaqListing.length - 2);
 
-    const postProcessedNasdaqListing = nasdaqListing.map((ticker: string) => {
+    // prettier-ignore
+    const postProcessedNasdaqListing: ConstitueRecord[] = nasdaqListing.map((ticker: string) => {
       const [symbol, name] = ticker.split('|');
 
       return { symbol, name: name.split(' - ')[0] };
     });
 
     return postProcessedNasdaqListing || undefined;
+  }
+
+  async listSNP(): Promise<Array<ConstitueRecord> | undefined> {
+    const wikiData: ConstitueRecord[] = [];
+    const wikiPage = await axios.get(WIKI_SNP_COMPANIES_URL);
+    const $ = cheerio.load(wikiPage.data);
+
+    // prettier-ignore
+    $('table#constituents').each((_, e) => {
+      $(e).find('tbody').each((__, company) => {
+        let symbol: string = '';
+        let name: string = '';
+
+        $(company).find('tr').each((_, companyRow) => {
+          $(companyRow).find('td').each((index, companyDetails) => {
+            if (index % 9 === 0) {
+              symbol = $(companyDetails).text();
+            }
+            if (index % 9 === 1) {
+              name = $(companyDetails).text();
+            }
+          });
+
+          if (symbol !== '' && name !== '') {
+            wikiData.push({ symbol: symbol.replace(/\n/g, ''), name });
+          }
+        });
+      });
+    });
+
+    return wikiData || undefined;
   }
 }
 

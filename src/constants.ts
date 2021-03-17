@@ -16,3 +16,6 @@ export const YAHOO_FINANCE_CHART_URL = (
 
 // prettier-ignore
 export const NASDAQ_TRADER_URL = 'ftp.nasdaqtrader.com';
+
+// prettier-ignore
+export const WIKI_SNP_COMPANIES_URL = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies';
