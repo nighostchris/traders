@@ -26,6 +26,6 @@ Install the library real quick and start to develop your own application:
 npm install traders
 ```
 
-## 🎓 Learning Gatsby
+## 🎓 Learning Traders
 
 Full documentation available [here](https://nighostchris.gitbook.io/traders/).

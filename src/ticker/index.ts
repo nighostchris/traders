@@ -17,6 +17,10 @@ import {
   transformTimestampToDate,
 } from '../utils/time';
 
+/**
+ * Represents a stock in the market
+ * @extends ITicker
+ */
 class Ticker implements ITicker {
   symbol: string;
 
