@@ -18,14 +18,14 @@ import {
 } from '../utils/time';
 
 class Ticker implements ITicker {
-  name: string;
+  symbol: string;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(symbol: string) {
+    this.symbol = symbol;
   }
 
   async liveQuote(): Promise<LiveQuoteData | undefined> {
-    const URL = YAHOO_FINANCE_QUOTE_SUMMARY_URL(this.name, ['price']);
+    const URL = YAHOO_FINANCE_QUOTE_SUMMARY_URL(this.symbol, ['price']);
 
     try {
       const response: AxiosResponse<any> = await axios.get(URL);
@@ -42,7 +42,6 @@ class Ticker implements ITicker {
         changePercent: liveQuoteResult.regularMarketChangePercent.fmt,
       };
     } catch (error) {
-      console.log(error);
       return undefined;
     }
   }
@@ -53,7 +52,7 @@ class Ticker implements ITicker {
     end: string
   ): Promise<Array<HistoricalData> | undefined> {
     const URL = YAHOO_FINANCE_CHART_URL(
-      this.name,
+      this.symbol,
       interval,
       String(transformDateToTimestamp(start)),
       String(transformDateToTimestamp(end))
@@ -75,7 +74,6 @@ class Ticker implements ITicker {
         date: String(transformTimestampToDate(timestamp)),
       }));
     } catch (error) {
-      console.log(error);
       return undefined;
     }
   }
