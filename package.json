@@ -1,12 +1,13 @@
 {
   "name": "traders",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Get free financial data in a simple and fast way",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "eslint",
+    "incver": "node increase-version.js",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "test": "jest --config jestconfig.json"
