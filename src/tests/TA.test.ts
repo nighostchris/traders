@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+import _ from 'lodash';
+
 import { HistoricalData } from '../interfaces/ticker';
 import { Ticker, TechnicalAnalysisLibrary } from '../index';
 
@@ -50,23 +52,15 @@ test('- Test TechnicalAnalysisLibrary.SMA() on incomplete data', async () => {
 test('- Test TechnicalAnalysisLibrary.EMA() on daily Visa historical prices', async () => {
   const ticker = new Ticker('V');
 
-  const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-03-01', '2021-03-17');
+  const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-02-15', '2021-03-11');
 
   const ta = new TechnicalAnalysisLibrary();
 
   try {
-    const result = ta.EMA(5, data);
+    const result_5ma = ta.EMA(5, data);
 
-    console.log(result);
-
-    if (!(result instanceof Error)) {
-      expect(result[result.length - 1]).toBe(223.44);
-      expect(result[result.length - 2]).toBe(222.81);
-      expect(result[result.length - 3]).toBe(222.58);
-      expect(result[result.length - 4]).toBe(221.69);
-      expect(result[result.length - 5]).toBe(219.47);
-      expect(result[result.length - 6]).toBe(217.61);
-      expect(result[result.length - 7]).toBe(216.24);
+    if (!(result_5ma instanceof Error)) {
+      expect(_.round(result_5ma[result_5ma.length - 1], 3)).toBe(219.465);
     }
   } catch (error) {
     console.log(error);

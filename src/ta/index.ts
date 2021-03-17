@@ -41,13 +41,10 @@ class TechnicalAnalysisLibrary implements ITechnicalAnalysisLibrary {
     const sma: number[] | Error = this.SMA(period, _.slice(data, 0, period));
 
     if (!(sma instanceof Error)) {
-      let baseEMA = _.round(sma[0], 2);
+      let baseEMA = sma[0];
 
       for (let i = period; i < data.length; i++) {
-        console.log(data[i].close);
         const currentEMA = multiplier * Number(data[i].close) + (1 - multiplier) * baseEMA;
-
-        console.log(currentEMA);
 
         result.push(currentEMA);
 
