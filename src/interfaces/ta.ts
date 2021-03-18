@@ -21,4 +21,12 @@ export interface ITechnicalAnalysisLibrary {
    * @param data An array of HistoricalData providing the required stock closing prices
    */
   EMA(period: number, data: HistoricalData[] | undefined): number[] | Error;
+
+  /**
+   * An advancement for the Stochastic Oscillator.
+   * @param period Target time period for calculating stochastic momentum index
+   * @param data An array of HistoricalData providing the required stock information
+   * based on given timeframe
+   */
+  SMI(period: number, data: HistoricalData[] | undefined): number[] | Error;
 }

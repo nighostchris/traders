@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+
 import Ticker from './ticker';
 import Market from './market';
 import TechnicalAnalysisLibrary from './ta';
