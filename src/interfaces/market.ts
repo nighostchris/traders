@@ -1,10 +1,22 @@
-export interface ConstitueRecord {
+/**
+ * General structure of response object by Market functions
+ */
+export interface ConstituentRecord {
   symbol: string;
   name: string;
 }
 
+/**
+ * Interface for Market class
+ */
 export interface IMarket {
-  listNasdaq(): Promise<Array<ConstitueRecord> | undefined>;
+  /**
+   * Get the symbol and name of NASDAQ constituents
+   */
+  listNasdaq(): Promise<ConstituentRecord[] | undefined>;
 
-  listSNP(): Promise<Array<ConstitueRecord> | undefined>;
+  /**
+   * Get the symbol and name of S&P 500 constituents
+   */
+  listSNP(): Promise<ConstituentRecord[] | undefined>;
 }

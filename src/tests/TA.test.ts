@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, camelcase */
 import _ from 'lodash';
 
 import { HistoricalData } from '../interfaces/ticker';

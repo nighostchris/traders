@@ -3,12 +3,12 @@ import axios from 'axios';
 import cheerio from 'cheerio';
 import PromiseFTP from 'promise-ftp';
 
-import { IMarket, ConstitueRecord } from '../interfaces/market';
+import { IMarket, ConstituentRecord } from '../interfaces/market';
 import { NASDAQ_TRADER_URL, WIKI_SNP_COMPANIES_URL } from '../constants';
 import { streamToString } from '../utils/stream';
 
 class Market implements IMarket {
-  async listNasdaq(): Promise<Array<ConstitueRecord> | undefined> {
+  async listNasdaq(): Promise<ConstituentRecord[] | undefined> {
     let rawNasdaqListing: string = '';
     const ftpClient: PromiseFTP = new PromiseFTP();
 
@@ -25,7 +25,7 @@ class Market implements IMarket {
     nasdaqListing = nasdaqListing.slice(1, nasdaqListing.length - 2);
 
     // prettier-ignore
-    const postProcessedNasdaqListing: ConstitueRecord[] = nasdaqListing.map((ticker: string) => {
+    const postProcessedNasdaqListing: ConstituentRecord[] = nasdaqListing.map((ticker: string) => {
       const [symbol, name] = ticker.split('|');
 
       return { symbol, name: name.split(' - ')[0] };
@@ -34,8 +34,8 @@ class Market implements IMarket {
     return postProcessedNasdaqListing || undefined;
   }
 
-  async listSNP(): Promise<Array<ConstitueRecord> | undefined> {
-    const wikiData: ConstitueRecord[] = [];
+  async listSNP(): Promise<ConstituentRecord[] | undefined> {
+    const wikiData: ConstituentRecord[] = [];
     const wikiPage = await axios.get(WIKI_SNP_COMPANIES_URL);
     const $ = cheerio.load(wikiPage.data);
 

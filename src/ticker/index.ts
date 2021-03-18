@@ -54,7 +54,7 @@ class Ticker implements ITicker {
     interval: Interval,
     start: string,
     end: string
-  ): Promise<Array<HistoricalData> | undefined> {
+  ): Promise<HistoricalData[] | undefined> {
     const URL = YAHOO_FINANCE_CHART_URL(
       this.symbol,
       interval,

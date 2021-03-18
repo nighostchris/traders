@@ -48,9 +48,9 @@ export interface ITicker {
    * @param interval Valid timeframes for the data
    * @param start Start date for the data in format [YYYY-MM-DD]
    * @param end End date for the data in format [YYYY-MM-DD]
-   * @returns {Promise<Array<HistoricalData> | undefined>} The historical price data
+   * @returns {Promise<HistoricalData[] | undefined>} The historical price data
    */
   // prettier-ignore
   historical(interval: Interval, start: string, end: string)
-    : Promise<Array<HistoricalData> | undefined>;
+    : Promise<HistoricalData[] | undefined>;
 }
