@@ -13,8 +13,8 @@ class TechnicalAnalysisLibrary implements ITechnicalAnalysisLibrary {
   EMA = (period: number, data: HistoricalData[] | undefined)
     : number[] | Error => EMAFunc(period, data);
 
-  SMI = (period: number, data: HistoricalData[] | undefined)
-    : number[] | Error => SMIFunc(period, data);
+  SMI = (period: number, emaPeriod: number, data: HistoricalData[] | undefined)
+    : number[] | Error => SMIFunc(period, emaPeriod, data);
 }
 
 export default TechnicalAnalysisLibrary;

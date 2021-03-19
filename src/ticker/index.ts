@@ -37,12 +37,12 @@ class Ticker implements ITicker {
       const liveQuoteResult = response.data.quoteSummary.result[0].price;
 
       return {
-        open: liveQuoteResult.regularMarketOpen.fmt,
-        price: liveQuoteResult.regularMarketPrice.fmt,
-        high: liveQuoteResult.regularMarketDayHigh.fmt,
-        low: liveQuoteResult.regularMarketDayLow.fmt,
-        volume: liveQuoteResult.regularMarketVolume.fmt,
-        change: liveQuoteResult.regularMarketChange.fmt,
+        open: Number(liveQuoteResult.regularMarketOpen.fmt),
+        price: Number(liveQuoteResult.regularMarketPrice.fmt),
+        high: Number(liveQuoteResult.regularMarketDayHigh.fmt),
+        low: Number(liveQuoteResult.regularMarketDayLow.fmt),
+        volume: Number(liveQuoteResult.regularMarketVolume.fmt),
+        change: Number(liveQuoteResult.regularMarketChange.fmt),
         changePercent: liveQuoteResult.regularMarketChangePercent.fmt,
       };
     } catch (error) {
@@ -70,11 +70,11 @@ class Ticker implements ITicker {
       const quoteData = chartResult.indicators.quote[0];
 
       return timestamps.map((timestamp: number, index: number) => ({
-        open: quoteData.open[index],
-        high: quoteData.high[index],
-        low: quoteData.low[index],
-        volume: quoteData.volume[index],
-        close: quoteData.close[index],
+        open: Number(quoteData.open[index]),
+        high: Number(quoteData.high[index]),
+        low: Number(quoteData.low[index]),
+        volume: Number(quoteData.volume[index]),
+        close: Number(quoteData.close[index]),
         date: String(transformTimestampToDate(timestamp)),
       }));
     } catch (error) {

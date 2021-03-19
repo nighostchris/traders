@@ -66,3 +66,22 @@ test('- Test TechnicalAnalysisLibrary.EMA() on daily Visa historical prices', as
     console.log(error);
   }
 });
+
+// prettier-ignore
+test('- Test TechnicalAnalysisLibrary.SMI() on daily Visa historical prices', async () => {
+  const ticker = new Ticker('V');
+
+  const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-02-01', '2021-03-13');
+
+  const ta = new TechnicalAnalysisLibrary();
+
+  try {
+    const result = ta.SMI(10, 3, data);
+
+    if (!(result instanceof Error)) {
+      expect(result[result.length - 1]).toBe(29.14);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
