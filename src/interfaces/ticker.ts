@@ -10,12 +10,12 @@ export type Interval = '1m' | '2m' | '5m' | '15m' | '30m' | '60m' | '90m' | '1h'
  * Structure of response object by liveQuote()
  */
 export interface LiveQuoteData {
-  open: string;
-  price: string;
-  high: string;
-  low: string;
-  volume: string;
-  change: string;
+  open: number;
+  price: number;
+  high: number;
+  low: number;
+  volume: number;
+  change: number;
   changePercent: string;
 }
 
@@ -23,11 +23,11 @@ export interface LiveQuoteData {
  * Structure of response object by historical()
  */
 export interface HistoricalData {
-  open: string;
-  high: string;
-  low: string;
-  volume: string;
-  close: string;
+  open: number;
+  high: number;
+  low: number;
+  volume: number;
+  close: number;
   date: string;
 }
 
