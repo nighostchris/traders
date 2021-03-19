@@ -4,6 +4,34 @@ import _ from 'lodash';
 import { EMAFunc } from '../moving-average';
 import { HistoricalData } from '../../interfaces/ticker';
 
+const HH = (data: number[], period: number) => {
+  const result: number[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    if (i > period - 1) {
+      result.push(_.max(_.slice(data, i - period + 1, i + 1))!);
+    } else {
+      result.push(_.max(_.slice(data, 0, i + 1))!);
+    }
+  }
+
+  return result;
+};
+
+const LL = (data: number[], period: number) => {
+  const result: number[] = [];
+
+  for (let i = 0; i < data.length; i++) {
+    if (i > period - 1) {
+      result.push(_.min(_.slice(data, i - period + 1, i + 1))!);
+    } else {
+      result.push(_.min(_.slice(data, 0, i + 1))!);
+    }
+  }
+
+  return result;
+};
+
 // prettier-ignore
 const SMI = (period: number, emaPeriod: number, data: HistoricalData[] | undefined): number[] | Error => {
   if (!data) {
@@ -14,57 +42,47 @@ const SMI = (period: number, emaPeriod: number, data: HistoricalData[] | undefin
     return new Error('Not enough data to compute SMI for the target period.');
   }
 
-  const result: number[] = [];
-  const calculations: number = data.length - period;
+  const highestHigh: number[] = HH(data.map((r: HistoricalData) => r.high), period);
+  const lowestLow: number[] = LL(data.map((r: HistoricalData) => r.low), period);
 
-  console.log(data.map((d) => d.high), calculations);
+  const center: HistoricalData[] = highestHigh.map((high: number, index: number) => ({
+    open: 0, high: 0, low: 0, volume: 0, close: (high + lowestLow[index]) / 2, date: ''
+  }));
+  const priceRange: HistoricalData[] = highestHigh.map((high: number, index: number) => ({
+    open: 0, high: 0, low: 0, volume: 0, close: high - lowestLow[index], date: ''
+  }));
 
-  // have day 1 - 15
-  // now first 10 days
-  // need get 7 8 9 10 for ema -> [6] to [9]
-  // period + i - emaPeriod = 10 + 0 - 3 - 1 = 6
-  for (let i = 0; i < calculations; i++) {
-    const target: HistoricalData[] = _.slice(data, i, data.length - calculations + i + 1);
-    const highestHigh: number = Number(_.max(target.map((r: HistoricalData) => Number(r.high))));
-    const lowestLow: number = Number(_.min(target.map((r: HistoricalData) => Number(r.low))));
-    const center: number = (highestHigh + lowestLow) / 2;
+  const stochasticMomentum: HistoricalData[] = data.map((r: HistoricalData, index: number) => ({
+    ...r, close: r.close - center[index].close
+  }));
 
-    const stochasticMomentum: HistoricalData[] = target.map((r: HistoricalData) => ({ ...r, close: r.close - center }));
-    const priceRange: HistoricalData[] = target.map((r: HistoricalData) => ({ ...r, close: highestHigh - lowestLow }));
-
-    try {
-      const smoothedSM: number[] | Error = EMAFunc(emaPeriod, _.slice(stochasticMomentum, period - emaPeriod - 1 + i, period + i));
-
-      let doubleSmoothedSM: number[] | Error = [];
-      if (!(smoothedSM instanceof Error)) {
-        doubleSmoothedSM = EMAFunc(
-          emaPeriod,
-          // eslint-disable-next-line object-curly-newline
-          smoothedSM.map((r: number) => ({ open: 0, high: 0, low: 0, volume: 0, close: r, date: '' })),
-        );
-      }
-
-      const smoothedPR: number[] | Error = EMAFunc(emaPeriod, _.slice(priceRange, period - emaPeriod - 1 + i, period + i));
-      let doubleSmoothedPR: number[] | Error = [];
-      if (!(smoothedPR instanceof Error)) {
-        doubleSmoothedPR = EMAFunc(
-          emaPeriod,
-          // eslint-disable-next-line object-curly-newline
-          smoothedPR.map((r: number) => ({ open: 0, high: 0, low: 0, volume: 0, close: r, date: '' })),
-        );
-      }
-
-      console.log(doubleSmoothedSM, doubleSmoothedPR);
-
-      if ((doubleSmoothedSM instanceof Array) && (doubleSmoothedPR instanceof Array)) {
-        result.push((_.last(smoothedSM)) / (_.last(smoothedPR)) * 100);
-      }
-    } catch (error) {
-      return new Error('Encountered error during SMI calculation. You can check if there is any invalid inputs.');
+  try {
+    const smoothedSM: number[] | Error = EMAFunc(emaPeriod, stochasticMomentum);
+    let doubleSmoothedSM: number[] | Error = [];
+    if (!(smoothedSM instanceof Error)) {
+      doubleSmoothedSM = EMAFunc(emaPeriod, smoothedSM.map((r: number) => ({
+        open: 0, high: 0, low: 0, volume: 0, close: r, date: ''
+      })));
     }
-  }
 
-  return result;
+    const smoothedPR: number[] | Error = EMAFunc(emaPeriod, priceRange);
+    let doubleSmoothedPR: number[] | Error = [];
+    if (!(smoothedPR instanceof Error)) {
+      doubleSmoothedPR = EMAFunc(emaPeriod, smoothedPR.map((r: number) => ({
+        open: 0, high: 0, low: 0, volume: 0, close: r, date: ''
+      })));
+    }
+
+    if (!(doubleSmoothedSM instanceof Error) && !(doubleSmoothedPR instanceof Error)) {
+      const doubleSmoothedPRNumber: number[] = doubleSmoothedPR;
+
+      return doubleSmoothedSM.map((r: number, index: number) => _.round(r / doubleSmoothedPRNumber[index] * 100, 2));
+    }
+
+    return Error('Encountered error during SMI calculation. You can check if there is any invalid inputs.');
+  } catch (error) {
+    return Error('Encountered error during SMI calculation. You can check if there is any invalid inputs.');
+  }
 };
 
 export default SMI;

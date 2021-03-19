@@ -5,7 +5,7 @@ import { HistoricalData } from '../interfaces/ticker';
 import { Ticker, TechnicalAnalysisLibrary } from '../index';
 
 // prettier-ignore
-test.skip('- Test TechnicalAnalysisLibrary.SMA() on daily Visa historical prices', async () => {
+test('- Test TechnicalAnalysisLibrary.SMA() on daily Visa historical prices', async () => {
   const ticker = new Ticker('V');
 
   const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-03-01', '2021-03-17');
@@ -27,7 +27,7 @@ test.skip('- Test TechnicalAnalysisLibrary.SMA() on daily Visa historical prices
   }
 });
 
-test.skip('- Test TechnicalAnalysisLibrary.SMA() on undefined data', async () => {
+test('- Test TechnicalAnalysisLibrary.SMA() on undefined data', async () => {
   const ta = new TechnicalAnalysisLibrary();
 
   const result = ta.SMA(5, undefined);
@@ -36,7 +36,7 @@ test.skip('- Test TechnicalAnalysisLibrary.SMA() on undefined data', async () =>
 });
 
 // prettier-ignore
-test.skip('- Test TechnicalAnalysisLibrary.SMA() on incomplete data', async () => {
+test('- Test TechnicalAnalysisLibrary.SMA() on incomplete data', async () => {
   const ticker = new Ticker('V');
 
   const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-03-01', '2021-03-03');
@@ -49,7 +49,7 @@ test.skip('- Test TechnicalAnalysisLibrary.SMA() on incomplete data', async () =
 });
 
 // prettier-ignore
-test.skip('- Test TechnicalAnalysisLibrary.EMA() on daily Visa historical prices', async () => {
+test('- Test TechnicalAnalysisLibrary.EMA() on daily Visa historical prices', async () => {
   const ticker = new Ticker('V');
 
   const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-02-15', '2021-03-11');
@@ -71,18 +71,15 @@ test.skip('- Test TechnicalAnalysisLibrary.EMA() on daily Visa historical prices
 test('- Test TechnicalAnalysisLibrary.SMI() on daily Visa historical prices', async () => {
   const ticker = new Ticker('V');
 
-  const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-02-26', '2021-03-15');
+  const data: HistoricalData[] | undefined = await ticker.historical('1d', '2021-02-01', '2021-03-13');
 
   const ta = new TechnicalAnalysisLibrary();
 
   try {
-    const result_3ma = ta.SMI(10, 3, data);
+    const result = ta.SMI(10, 3, data);
 
-    console.log(result_3ma);
-
-    if (!(result_3ma instanceof Error)) {
-      // expect(_.round(result_5ma[result_5ma.length - 1], 3)).toBe(219.465);
-      expect(1).toBe(1);
+    if (!(result instanceof Error)) {
+      expect(result[result.length - 1]).toBe(29.14);
     }
   } catch (error) {
     console.log(error);

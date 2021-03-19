@@ -24,7 +24,8 @@ export interface ITechnicalAnalysisLibrary {
   EMA(period: number, data: HistoricalData[] | undefined): number[] | Error;
 
   /**
-   * An advancement for the Stochastic Oscillator.
+   * An advancement for the Stochastic Oscillator. Note that you might need at least data with
+   * length of at least double period in order to have the latest records more accurate
    * @param period Target time period for calculating stochastic momentum index
    * @param data An array of HistoricalData providing the required stock information
    * based on given timeframe
