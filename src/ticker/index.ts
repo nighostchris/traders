@@ -38,10 +38,10 @@ class Ticker implements ITicker {
 
       return {
         open: Number(liveQuoteResult.regularMarketOpen.fmt),
-        price: Number(liveQuoteResult.regularMarketPrice.fmt),
+        price: liveQuoteResult.regularMarketPrice.fmt,
         high: Number(liveQuoteResult.regularMarketDayHigh.fmt),
         low: Number(liveQuoteResult.regularMarketDayLow.fmt),
-        volume: Number(liveQuoteResult.regularMarketVolume.fmt),
+        volume: liveQuoteResult.regularMarketVolume.fmt,
         change: Number(liveQuoteResult.regularMarketChange.fmt),
         changePercent: liveQuoteResult.regularMarketChangePercent.fmt,
       };
